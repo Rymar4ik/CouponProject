@@ -11,6 +11,12 @@ public class Company {
 
 	public Company() {
 	}
+	
+	public Company(String compName, String password, String email){
+		this.compName = compName;
+		this.password = password;
+		this.email = email;
+	}
 
 	public Company(long id, String compName, String password, String email) {
 		this.id = id;

@@ -1,6 +1,9 @@
-package couponsProject;
+package couponsProject.DAO;
 
 import java.util.Collection;
+
+import couponsProject.Coupon;
+import couponsProject.CouponType;
 
 public interface CouponDAO {
 	public void createCoupon(Coupon coupon);
