@@ -30,9 +30,6 @@ public class DailyCouponExpirationTask implements Runnable {
 		while (!quit) {
 			while (true) {
 				if (new Date().getTime() % 86400000 == 0) {
-
-					allCoupons = couponDBDAO.getAllCoupon();
-					iterator = allCoupons.iterator();
 					while (iterator.hasNext()) {
 						Coupon tmp = iterator.next();
 						if (tmp.getEndDate().before(new Date())) {

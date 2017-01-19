@@ -9,7 +9,7 @@ import java.util.Iterator;
 public class ConnectionPool {
 
 	private static ConnectionPool instance;
-	private static String conURL = "jdbc:mysql://localhost/CouponSystem";
+	private static String conURL = "jdbc:mysql://localhost/CouponSystem?autoReconnect=true&useSSL=false";
 	private static String user = "root";
 	private static String password = "0000";
 	private int maxConnectionCount = 5;
