@@ -33,7 +33,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				if (customer.getCustName().equals(resultSet.getString(2))) {
+				if (customer.getCustName().equals(resultSet.getString(1))) {
 					flag = false;
 					ConnectionPool.getInstance().returnConnection(connection);
 					System.out.println("customer " + customer.getCustName() + " is already exists");
@@ -44,6 +44,16 @@ public class CustomerDBDAO implements CustomerDAO {
 				statement.setString(1, customer.getCustName());
 				statement.setString(2, customer.getPassword());
 				statement.executeUpdate();
+				statement = connection.prepareStatement(SQLQueryRequest.GET_CUSTOMER_ID_BY_NAME);
+				statement.setString(1, customer.getCustName());
+				ResultSet resultSetID = statement.executeQuery();
+				while (resultSetID.next()) {
+					customer.setId(resultSetID.getLong(1));
+				}
+				statement = connection.prepareStatement(SQLQueryRequest.ADD_CUSTOMER_TO_CUSTOMER_COUPON_JOIN_TABLE);
+				statement.setLong(1, customer.getId());
+				statement.executeUpdate();
+				
 				ConnectionPool.getInstance().returnConnection(connection);
 				System.out.println("Customer " + customer.getCustName() + " added successfull");
 			}
@@ -91,6 +101,12 @@ public class CustomerDBDAO implements CustomerDAO {
 		try {
 			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_CUSTOMER_ID);
 			ResultSet resultSet = statement.executeQuery();
+			statement = connection.prepareStatement(SQLQueryRequest.GET_CUSTOMER_ID_BY_NAME);
+			statement.setString(1, customer.getCustName());
+			ResultSet resultSetID = statement.executeQuery();
+			while (resultSetID.next()) {
+				customer.setId(resultSetID.getLong(1));
+			}
 			while (resultSet.next()) {
 				if (customer.getId() == resultSet.getInt(1)) {
 					try {
@@ -116,7 +132,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("This customer is not exist");
+		
 		ConnectionPool.getInstance().returnConnection(connection);
 	}
 

@@ -11,12 +11,19 @@ public class Customer {
 	public Customer() {
 	}
 
-	public Customer(long id, String custName, String password) {
-		super();
-		this.id = id;
+	public Customer(String custName, String password) {
 		this.custName = custName;
 		this.password = password;
+		
 	}
+//	public Customer(long id, String custName, String password) {
+//		
+//		this.id = id;
+//		this.custName = custName;
+//		this.password = password;
+//	}
+	
+	
 
 	public long getId() {
 		return id;

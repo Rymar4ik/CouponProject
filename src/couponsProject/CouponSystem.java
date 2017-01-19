@@ -22,4 +22,10 @@ public class CouponSystem {
 		client = ClientTypeFactory.login(name, password, type);
 		return client;
 	}
+	
+	public void shutdown() {
+		task.stopTask();
+		ConnectionPool.getInstance().closeAllConnections();
+	}
+	
 }

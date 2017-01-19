@@ -213,7 +213,10 @@ public class CouponDBDAO implements CouponDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		ConnectionPool.getInstance().returnConnection(connection);
+		finally {
+			ConnectionPool.getInstance().returnConnection(connection);
+		}
+		
 		return collectionCoupon;
 	}
 

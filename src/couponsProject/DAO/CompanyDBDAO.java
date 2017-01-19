@@ -32,7 +32,7 @@ public class CompanyDBDAO implements CompanyDAO {
 			
 			
 			while (resultSet.next()) {
-				if (company.getCompName().equals(resultSet.getString(2))) {
+				if (company.getCompName().equals(resultSet.getString(1))) {
 					flag = false;
 					System.out.println("company name " + company.getCompName() + " is already exists");
 				}
@@ -40,7 +40,7 @@ public class CompanyDBDAO implements CompanyDAO {
 			statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_EMAILS);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				if (company.getEmail().equals(resultSet.getString(4))) {
+				if (company.getEmail().equals(resultSet.getString(1))) {
 					flag = false;
 					System.out.println("Company with email " + company.getEmail() + " already exists");
 				}
@@ -51,6 +51,12 @@ public class CompanyDBDAO implements CompanyDAO {
 				statement.setString(2, company.getPassword());
 				statement.setString(3, company.getEmail());
 				statement.executeUpdate();	
+				statement = connection.prepareStatement(SQLQueryRequest.GET_COMPANY_ID_BY_NAME);
+				statement.setString(1, company.getCompName());
+				ResultSet id = statement.executeQuery();
+				while (id.next()) {
+				company.setId(Long.parseLong(id.getString(1)));
+				}
 				statement = connection.prepareStatement(SQLQueryRequest.ADD_COMPANY_TO_COMPANY_COUPON_JOIN_TABLE);
 				statement.setLong(1, company.getId());
 				statement.executeUpdate();
