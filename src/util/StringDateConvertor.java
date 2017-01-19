@@ -1,4 +1,4 @@
-package couponsProject;
+package util;
 
 import java.sql.Date;
 import java.text.ParseException;

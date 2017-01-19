@@ -16,7 +16,7 @@ public class ConnectionPool {
 	HashSet<Connection> connections = new HashSet<>();
 	Object key = new Object();
 
-	// private constructor because we don't need create an instance of this
+	// private constructor because we don't need to create an instance of this
 	// class from any other class
 	// creation of 5 connections
 	private ConnectionPool() {

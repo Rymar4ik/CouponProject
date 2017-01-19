@@ -27,33 +27,33 @@ public class CompanyDBDAO implements CompanyDAO {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		boolean flag = true;
 		try {
-			PreparedStatement st = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_NAMES);
-			ResultSet set = st.executeQuery();
+			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_NAMES);
+			ResultSet resultSet = statement.executeQuery();
 			
 			
-			while (set.next()) {
-				if (company.getCompName().equals(set.getString(2))) {
+			while (resultSet.next()) {
+				if (company.getCompName().equals(resultSet.getString(2))) {
 					flag = false;
 					System.out.println("company name " + company.getCompName() + " is already exists");
 				}
 			}
-			st = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_EMAILS);
-			set = st.executeQuery();
-			while (set.next()) {
-				if (company.getEmail().equals(set.getString(4))) {
+			statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_EMAILS);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				if (company.getEmail().equals(resultSet.getString(4))) {
 					flag = false;
 					System.out.println("Company with email " + company.getEmail() + " already exists");
 				}
 			}
 			if (flag) {
-				st = connection.prepareStatement(SQLQueryRequest.ADD_NEW_COMPANY_TO_DB);
-				st.setString(1, company.getCompName());
-				st.setString(2, company.getPassword());
-				st.setString(3, company.getEmail());
-				st.executeUpdate();	
-				st = connection.prepareStatement(SQLQueryRequest.ADD_COMPANY_TO_COMPANY_COUPON_JOIN_TABLE);
-				st.setLong(1, company.getId());
-				st.executeUpdate();
+				statement = connection.prepareStatement(SQLQueryRequest.ADD_NEW_COMPANY_TO_DB);
+				statement.setString(1, company.getCompName());
+				statement.setString(2, company.getPassword());
+				statement.setString(3, company.getEmail());
+				statement.executeUpdate();	
+				statement = connection.prepareStatement(SQLQueryRequest.ADD_COMPANY_TO_COMPANY_COUPON_JOIN_TABLE);
+				statement.setLong(1, company.getId());
+				statement.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -68,28 +68,28 @@ public class CompanyDBDAO implements CompanyDAO {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
 		try {
-			PreparedStatement st = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
-			ResultSet resultSet = st.executeQuery();
+			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
+			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				if (company.getId() == resultSet.getInt(1)) {
 					try {
 						System.out.println("enter a new Company name");
-						st = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_NAME_BY_ID);
+						statement = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_NAME_BY_ID);
 						String newName = reader.readLine();
-						st.setString(1, newName);
-						st.setLong(2, company.getId());
-						st.executeUpdate();
+						statement.setString(1, newName);
+						statement.setLong(2, company.getId());
+						statement.executeUpdate();
 						System.out.println("enter a new password");
-						st = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_PASSWORD_BY_ID);
+						statement = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_PASSWORD_BY_ID);
 						String newPassword = reader.readLine();
-						st.setString(1, newPassword);
-						st.setLong(2, company.getId());
-						st.executeUpdate();
-						st = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_EMAIL_BY_ID);
+						statement.setString(1, newPassword);
+						statement.setLong(2, company.getId());
+						statement.executeUpdate();
+						statement = connection.prepareStatement(SQLQueryRequest.SET_NEW_COMPANY_EMAIL_BY_ID);
 						String newEmail = reader.readLine();
-						st.setString(1, newEmail);
-						st.setLong(2, company.getId());
-						st.executeUpdate();
+						statement.setString(1, newEmail);
+						statement.setLong(2, company.getId());
+						statement.executeUpdate();
 						System.out.println("Company updated successfull");
 						ConnectionPool.getInstance().returnConnection(connection);
 					} catch (IOException e) {
@@ -108,16 +108,16 @@ public class CompanyDBDAO implements CompanyDAO {
 	public Company getCompany(long id) {
 		Company company = new Company();
 		Connection connection = ConnectionPool.getInstance().getConnection();
-		PreparedStatement st;
+		PreparedStatement statement;
 		try {
-			st = connection.prepareStatement(SQLQueryRequest.GET_COMPANY_BY_ID);
-			st.setLong(1, id);
-			ResultSet set = st.executeQuery();
-			while (set.next()) {
-				company.setId(set.getLong(1));
-				company.setCompName(set.getString(2));
-				company.setPassword(set.getString(3));
-				company.setEmail(set.getString(4));
+			statement = connection.prepareStatement(SQLQueryRequest.GET_COMPANY_BY_ID);
+			statement.setLong(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				company.setId(resultSet.getLong(1));
+				company.setCompName(resultSet.getString(2));
+				company.setPassword(resultSet.getString(3));
+				company.setEmail(resultSet.getString(4));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,11 +131,11 @@ public class CompanyDBDAO implements CompanyDAO {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		Collection<Company> collectionCompany = new HashSet<Company>();
 		try {
-			PreparedStatement st = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
-			ResultSet res = st.executeQuery();
-			while (res.next()) {
+			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
 				collectionCompany
-						.add(getCompany(res.getLong(1)));
+						.add(getCompany(resultSet.getLong(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,12 +150,12 @@ public class CompanyDBDAO implements CompanyDAO {
 		HashSet<Coupon> allCompanyCoupons = new HashSet<>();
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		try {
-			PreparedStatement st = connection
+			PreparedStatement statement = connection
 					.prepareStatement(SQLQueryRequest.GET_COUPON_FROM_COMPANY_COUPON_JOIN_TABLE_BY_COMPANY_ID);
-			st.setLong(1, company.getId());
-			ResultSet set = st.executeQuery();
-			while (set.next()) {
-				allCompanyCoupons.add(couponDBDAO.getCoupon(set.getLong(1)));
+			statement.setLong(1, company.getId());
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				allCompanyCoupons.add(couponDBDAO.getCoupon(resultSet.getLong(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -166,20 +166,20 @@ public class CompanyDBDAO implements CompanyDAO {
 	@Override
 	public boolean login(String name, String password) {
 		Connection connection = ConnectionPool.getInstance().getConnection();
-		PreparedStatement st;
+		PreparedStatement statement;
 		try {
-			st = connection.prepareStatement(SQLQueryRequest.GET_COMPANY_BY_NAME_AND_PASSWORD);
-			st.setString(1, name);
-			st.setString(2, password);
-			ResultSet set = st.executeQuery();
-			while (set.next()) {
-				company.setId(set.getLong(1));
-				company.setCompName(set.getString(2));
-				company.setPassword(set.getString(3));
-				company.setEmail(set.getString(4));
-				st = connection.prepareStatement(SQLQueryRequest.ADD_COMPANY_TO_COMPANY_COUPON_JOIN_TABLE);
-				st.setLong(1, company.getId());
-				st.executeUpdate();
+			statement = connection.prepareStatement(SQLQueryRequest.GET_COMPANY_BY_NAME_AND_PASSWORD);
+			statement.setString(1, name);
+			statement.setString(2, password);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				company.setId(resultSet.getLong(1));
+				company.setCompName(resultSet.getString(2));
+				company.setPassword(resultSet.getString(3));
+				company.setEmail(resultSet.getString(4));
+				statement = connection.prepareStatement(SQLQueryRequest.ADD_COMPANY_TO_COMPANY_COUPON_JOIN_TABLE);
+				statement.setLong(1, company.getId());
+				statement.executeUpdate();
 				ConnectionPool.getInstance().returnConnection(connection);
 				return true;
 			}
@@ -196,18 +196,18 @@ public class CompanyDBDAO implements CompanyDAO {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 
 		try {
-			PreparedStatement st = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
-			ResultSet resultID = st.executeQuery();
-			while (resultID.next()) {
-				if (company.getId() == resultID.getInt(1)) {
+			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.GET_ALL_COMPANY_ID);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				if (company.getId() == resultSet.getInt(1)) {
 					try {
-						st = connection.prepareStatement(SQLQueryRequest.DELETE_COMPANY_BY_ID);
-						st.setLong(1, company.getId());
-						st.executeUpdate();
-						st = connection
+						statement = connection.prepareStatement(SQLQueryRequest.DELETE_COMPANY_BY_ID);
+						statement.setLong(1, company.getId());
+						statement.executeUpdate();
+						statement = connection
 								.prepareStatement(SQLQueryRequest.REMOVE_COMPANY_FROM_COMPANY_COUPON_JOIN_TABLE);
-						st.setLong(1, company.getId());
-						st.executeUpdate();
+						statement.setLong(1, company.getId());
+						statement.executeUpdate();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -223,10 +223,10 @@ public class CompanyDBDAO implements CompanyDAO {
 	public void createCoupon(Coupon coupon) {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		try {
-			PreparedStatement st = connection.prepareStatement(SQLQueryRequest.ADD_COUPON_TO_COMPANY_COUPON_JOIN_TABLE_BY_COMPANY_ID);
-			st.setLong(1, coupon.getId());
-			st.setLong(2, company.getId());
-			st.executeUpdate();
+			PreparedStatement statement = connection.prepareStatement(SQLQueryRequest.ADD_COUPON_TO_COMPANY_COUPON_JOIN_TABLE_BY_COMPANY_ID);
+			statement.setLong(1, coupon.getId());
+			statement.setLong(2, company.getId());
+			statement.executeUpdate();
 			couponDBDAO.createCoupon(coupon);
 			ConnectionPool.getInstance().returnConnection(connection);
 		} catch (SQLException e) {

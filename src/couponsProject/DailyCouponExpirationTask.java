@@ -8,7 +8,7 @@ import couponsProject.DAO.*;
 
 public class DailyCouponExpirationTask implements Runnable {
 	private CouponDBDAO couponDBDAO;
-	private boolean quit = false;
+	private  boolean quit = false;
 	 Thread thread;
 
 	public DailyCouponExpirationTask() {
@@ -29,7 +29,7 @@ public class DailyCouponExpirationTask implements Runnable {
 		}
 	}
 
-	public void stopTask() {
+	public  void stopTask() {
 		quit = true;
 	}
 

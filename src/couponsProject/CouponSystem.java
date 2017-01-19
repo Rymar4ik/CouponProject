@@ -5,10 +5,9 @@ import Facades.CouponClientFacade;
 public class CouponSystem {
 	private CouponClientFacade client;
 	private static CouponSystem instance;
-	private DailyCouponExpirationTask task;
+	private DailyCouponExpirationTask task = new DailyCouponExpirationTask();
 
 	private CouponSystem() {
-		task = new DailyCouponExpirationTask();
 	}
 
 	public static CouponSystem getInstance() {
