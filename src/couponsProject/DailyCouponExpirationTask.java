@@ -15,8 +15,8 @@ public class DailyCouponExpirationTask implements Runnable {
 		thread = new Thread(this, "DailyCouponExpirationTask");
 		thread.start();
 	}
-//один раз проверяет нет ли просроченных купонов при запуске программы, если есть - удаляет их
-	//после этого, пока программа работает, в 00.00.00 каждого дня проверяет и удаляет просроченные купоны
+//Г®Г¤ГЁГ­ Г°Г Г§ ГЇГ°Г®ГўГҐГ°ГїГҐГІ Г­ГҐГІ Г«ГЁ ГЇГ°Г®Г±Г°Г®Г·ГҐГ­Г­Г»Гµ ГЄГіГЇГ®Г­Г®Гў ГЇГ°ГЁ Г§Г ГЇГіГ±ГЄГҐ ГЇГ°Г®ГЈГ°Г Г¬Г¬Г», ГҐГ±Г«ГЁ ГҐГ±ГІГј - ГіГ¤Г Г«ГїГҐГІ ГЁГµ
+	//ГЇГ®Г±Г«ГҐ ГЅГІГ®ГЈГ®, ГЇГ®ГЄГ  ГЇГ°Г®ГЈГ°Г Г¬Г¬Г  Г°Г ГЎГ®ГІГ ГҐГІ, Гў 00.00.00 ГЄГ Г¦Г¤Г®ГЈГ® Г¤Г­Гї ГЇГ°Г®ГўГҐГ°ГїГҐГІ ГЁ ГіГ¤Г Г«ГїГҐГІ ГЇГ°Г®Г±Г°Г®Г·ГҐГ­Г­Г»ГҐ ГЄГіГЇГ®Г­Г»
 	@Override
 	public void run() {
 		HashSet<Coupon> allCoupons = couponDBDAO.getAllCoupon();
@@ -28,13 +28,11 @@ public class DailyCouponExpirationTask implements Runnable {
 			}
 		}
 		while (!quit) {
-			while (true) {
-				if (new Date().getTime() % 86400000 == 0) {
-					while (iterator.hasNext()) {
-						Coupon tmp = iterator.next();
-						if (tmp.getEndDate().before(new Date())) {
-							couponDBDAO.removeCoupon(tmp);
-						}
+			if (new Date().getTime() % 86400000 == 0) {
+				while (iterator.hasNext()) {
+					Coupon tmp = iterator.next();
+					if (tmp.getEndDate().before(new Date())) {
+						couponDBDAO.removeCoupon(tmp);
 					}
 				}
 			}
